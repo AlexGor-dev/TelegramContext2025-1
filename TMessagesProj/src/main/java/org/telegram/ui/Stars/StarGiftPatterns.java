@@ -7,7 +7,11 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 
 import org.telegram.messenger.AndroidUtilities;
+import org.telegram.messenger.Utilities;
 import org.telegram.ui.ActionBar.Theme;
+import org.telegram.ui.ProfileActivity;
+
+import java.util.ArrayList;
 
 public class StarGiftPatterns {
 
@@ -209,4 +213,96 @@ public class StarGiftPatterns {
         }
     }
 
+    private static final float[] levels = new float[] {
+            0.75f, 0.97f,
+            0.7f, 0.95f,
+            0.6f, 0.92f,
+            0.5f, 0.91f,
+            0.3f, 0.90f,
+            0.2f, 0.89f,
+            0.5f, 0.92f,
+    };
+    private static final float[] points = new float[] {
+            1, 0, -1, 1, .3f,
+            0, -.9f, -.5f, 1.1f, .3186f,
+            2, -1.3f, 0, 1.05f, .29f,
+            0, -.9f, .5f, 1, .32f,
+            1, 0, 1, 1.04f, .3186f,
+            0, .9f, .5f, 0.9f, .2923f,
+            6, 1.3f, 0, 0.95f, .3186f,
+            0, .9f, -.5f, 0.98f, .3186f,
+
+            3, -2.1f, 0, 0.9f, .15f,
+            3, 2.1f, 0, 0.9f, .15f,
+
+            1, -1.5f, -0.79f, 0.9f, .12f,
+            1, 1.5f, -0.79f, 0.9f, .12f,
+            1, 1.5f, 0.79f, 0.9f, .12f,
+            1, -1.5f, 0.79f, 0.9f, .12f,
+
+
+            5, -0.7f, -1.15f, 0.9f, .1f,
+            4, 0.7f, -1.15f, 0.9f, .1f,
+            4, 0.7f, 1.15f, 0.9f, .1f,
+            5, -0.7f, 1.15f, 0.9f, .1f,
+    };
+    public static void drawProfilePattern2(Canvas canvas, Drawable drawable, float cx, float cy, float avx, float avy, float totalAlpha, float diff, float posScale) {
+        final float alphaScale = 0.8f;
+        final float minAlpha = 0.1f;
+        final float sizeScale = dpf2(4);
+        final float minSize = dpf2(7);
+
+        for (int i = 0; i < points.length; i += 5) {
+            final int level = (int)points[i] * 2;
+            final float start = levels[level];
+            final float end = levels[level + 1];
+            final float curDiff = diff > 1 ? 1 + (diff - 1) * 3 : Math.max(0, Math.min(1, (diff - start) / (end - start)));
+
+            final float x = AndroidUtilities.lerp(avx, cx - points[i + 1] * posScale, curDiff);
+            final float y = AndroidUtilities.lerp(avy, cy - points[i + 2] * posScale, curDiff);
+
+            final float radius = minSize + points[i + 3] * curDiff * sizeScale;
+            final float alpha = minAlpha + points[i + 4] * curDiff * alphaScale;
+
+            drawable.setBounds( (int) (x - radius),  (int) (y - radius),  (int) (x + radius),  (int) (y + radius));
+            drawable.setAlpha((int) (0xFF * alpha * totalAlpha));
+            drawable.draw(canvas);
+        }
+    }
+
+    private static final float[] giftPatterns = new float[]{
+            -1.7f, -.20f, 1.05f, 1, 0.3f, 0.86f, 28, -10,
+            1.8f, -.22f, 0.95f, 1, 0.2f, 0.84f, -4, 20,
+
+            -1.1f, -.7f, 1.1f, 1, 0.6f, 0.96f, 8, -20,
+            1.2f, -.8f, 0.98f, 1, 0.4f, 0.88f, 3, -30,
+
+            -1.2f, .3f, 1, 1, 0.5f, 0.90f, -3, 33,
+            1.1f, .3f, 0.9f, 1, 0.7f, 0.98f, 2, -15,
+
+            -.05f, -1.1f, 1, 1, 0.5f, 0.90f, 0, 0,
+            .05f, 1.0f, 1.04f, 1, 0.5f, 0.88f, -5, 5,
+    };
+    public static void drawGifts(Canvas canvas, ArrayList<ProfileActivity.Gift> gifts, float cx, float cy, float avx, float avy, float totalAlpha, float diff, float posScale) {
+        final float alphaScale = 0.8f;
+        final float minAlpha = 0.1f;
+        final float sizeScale = dpf2(4);
+        final float minSize = dpf2(7);
+
+        for (int i = 0; i < Math.min(8, gifts.size()); ++i) {
+            final ProfileActivity.Gift gift = gifts.get(i);
+            final int index = i * 8;
+
+            final float start = giftPatterns[index + 4];
+            final float end = giftPatterns[index + 5];
+            final float curDiff = diff > 1 ? 1 + (diff - 1) * 3 : AndroidUtilities.calcDiff(diff, start, end);
+
+            final float x = AndroidUtilities.lerp(avx, cx + giftPatterns[index] * posScale, curDiff);
+            final float y = AndroidUtilities.lerp(avy, cy + giftPatterns[index + 1] * posScale, curDiff);
+            final float rotate = AndroidUtilities.lerp(giftPatterns[index + 7], giftPatterns[index + 6], curDiff);
+            final float radius = minSize + giftPatterns[index + 2] * curDiff * sizeScale;
+            final float alpha = minAlpha + giftPatterns[index + 3] * curDiff * alphaScale;
+            gift.draw(canvas, x, y, 1, rotate, alpha * totalAlpha, 1);
+        }
+    }
 }

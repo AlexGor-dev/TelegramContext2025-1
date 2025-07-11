@@ -83,6 +83,7 @@ public class AnimatedEmojiDrawable extends Drawable {
     public static final int CACHE_TYPE_ALERT_PREVIEW_LARGE_140 = 24;
     public static final int CACHE_TYPE_TOGGLEABLE_EDIT = 25;
     public static final int CACHE_TYPE_NOANIMATE_FOLDER = 26;
+    public static final int CACHE_TYPE_LOTTIE_IMAGE = 27;
 
     public int rawDrawIndex;
 
@@ -665,7 +666,12 @@ public class AnimatedEmojiDrawable extends Drawable {
                 if ("video/webm".equals(document.mime_type)) {
                     imageReceiver.setImage(null, null, ImageLocation.getForDocument(thumb, document), sizedp + "_" + sizedp, thumbLocation, null, thumbDrawable, document.size, null, document, 1);
                 } else if (MessageObject.isAnimatedStickerDocument(document, true)) {
-                    imageReceiver.setImage(mediaLocation, mediaFilter + "_firstframe", thumbLocation, null, thumbDrawable, document.size, null, document, 1);
+                    if(cacheType == CACHE_TYPE_LOTTIE_IMAGE) {
+                        cacheType = 0;
+                        imageReceiver.setImage(mediaLocation, mediaFilter, thumbLocation, null, thumbDrawable, document.size, null, document, 0);
+                    } else {
+                        imageReceiver.setImage(mediaLocation, mediaFilter + "_firstframe", thumbLocation, null, thumbDrawable, document.size, null, document, 1);
+                    }
                 } else {
                     imageReceiver.setImage(ImageLocation.getForDocument(thumb, document), sizedp + "_" + sizedp, thumbLocation, null, thumbDrawable, document.size, null, document, 1);
                 }

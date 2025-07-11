@@ -189,9 +189,6 @@ public class ProfileGiftsContainer extends FrameLayout implements NotificationCe
                 list.reorderPinned(fromPosition - 1, toPosition - 1);
                 listView.adapter.notifyItemMoved(fromPosition, toPosition);
                 listView.adapter.updateWithoutNotify();
-                if (fragment instanceof ProfileActivity && ((ProfileActivity) fragment).giftsView != null) {
-                    ((ProfileActivity) fragment).giftsView.update();
-                }
                 return true;
             }
 

@@ -966,6 +966,25 @@ public class AndroidUtilities {
         }
     }
 
+    public static void getViewBounds(View view, RectF bounds) {
+        final float width = view.getWidth() * view.getScaleX();
+        final float height = view.getHeight() * view.getScaleY();
+        final float x = view.getX() + view.getWidth() / 2f - width / 2;
+        final float y = view.getY() + view.getHeight() / 2f - height / 2;
+        bounds.set(x, y, x + width, y + width);
+    }
+    public static float calcDiffInvert(float diff, float start, float end) {
+        return Math.max(0, Math.min(1, (start - diff) / (end - start)));
+    }
+    public static float calcDiff(float diff, float start, float end) {
+        return Math.max(0, Math.min(1, (diff - start) / (end - start)));
+    }
+    public static float calcDiffEnd(float diff, float start) {
+        return calcDiff(diff, start, 1);
+    }
+    public static float calcDiffStart(float diff, float end) {
+        return calcDiff(diff, 0, end);
+    }
     public static MotionEvent emptyMotionEvent() {
         return MotionEvent.obtain(0, 0, MotionEvent.ACTION_CANCEL, 0, 0, 0);
     }
@@ -2631,6 +2650,13 @@ public class AndroidUtilities {
             return 0;
         }
         return (int) Math.floor(density * value);
+    }
+
+    public static int todp(float value) {
+        return Math.round(value / density);
+    }
+    public static float todpf(float value) {
+        return value / density;
     }
 
     public static int compare(int lhs, int rhs) {

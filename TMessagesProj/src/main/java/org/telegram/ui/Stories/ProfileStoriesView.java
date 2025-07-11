@@ -489,10 +489,13 @@ public class ProfileStoriesView extends View implements NotificationCenter.Notif
         float avatarPullProgress = Utilities.clamp((avatarContainer.getScaleX() - 1f) / 0.4f, 1f, 0f);
         float insetMain = AndroidUtilities.lerp(AndroidUtilities.dpf2(4f), AndroidUtilities.dpf2(3.5f), avatarPullProgress);
         insetMain *= progressToInsets;
-        float ax = avatarContainer.getX() + insetMain * avatarContainer.getScaleX();
-        float ay = avatarContainer.getY() + insetMain * avatarContainer.getScaleY();
+
+//        float ax = avatarContainer.getX() + insetMain * avatarContainer.getScaleX();
+//        float ay = avatarContainer.getY() + insetMain * avatarContainer.getScaleY();
         float aw = (avatarContainer.getWidth() - insetMain * 2) * avatarContainer.getScaleX();
         float ah = (avatarContainer.getHeight() - insetMain * 2) * avatarContainer.getScaleY();
+        float ax = avatarContainer.getX() + avatarContainer.getWidth() / 2f - aw / 2;
+        float ay = avatarContainer.getY() + avatarContainer.getHeight() / 2f - ah / 2;
         rect1.set(ax, ay, ax + aw, ay + ah);
 
         float maxX = this.left;
@@ -877,6 +880,8 @@ public class ProfileStoriesView extends View implements NotificationCenter.Notif
             forumSegmentPath.rLineTo(0, 0);
             canvas.drawPath(forumSegmentPath, paint);
         } else {
+//            float r = avatarImage.getRoundRadius()[0];
+//            canvas.drawRoundRect(oval, r, r, paint);
             canvas.drawArc(oval, startAngle, sweepAngle, useCenter, paint);
         }
     }

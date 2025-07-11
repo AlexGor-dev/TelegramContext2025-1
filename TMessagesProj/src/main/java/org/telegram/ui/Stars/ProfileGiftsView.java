@@ -324,10 +324,11 @@ public class ProfileGiftsView extends View implements NotificationCenter.Notific
     protected void dispatchDraw(@NonNull Canvas canvas) {
         if (gifts.isEmpty() || expandProgress >= 1.0f) return;
 
-        final float ax = avatarContainer.getX();
-        final float ay = avatarContainer.getY();
+
         final float aw = (avatarContainer.getWidth()) * avatarContainer.getScaleX();
         final float ah = (avatarContainer.getHeight()) * avatarContainer.getScaleY();
+        final float ax = avatarContainer.getX() + avatarContainer.getWidth() / 2 - aw / 2;
+        final float ay = avatarContainer.getY() + avatarContainer.getHeight() / 2 - ah / 2;
 
         canvas.save();
         canvas.clipRect(0, 0, getWidth(), expandY);

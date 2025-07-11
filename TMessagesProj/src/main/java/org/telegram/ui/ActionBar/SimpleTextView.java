@@ -291,6 +291,8 @@ public class SimpleTextView extends View implements Drawable.Callback {
         maxLines = value;
     }
 
+    public int getGravity(){return gravity; }
+
     public void setGravity(int value) {
         gravity = value;
     }
@@ -301,14 +303,14 @@ public class SimpleTextView extends View implements Drawable.Callback {
 
     public int getSideDrawablesSize() {
         int size = 0;
-        if (leftDrawable != null) {
+        if (leftDrawable != null && leftDrawable.getAlpha() > 0) {
             size += leftDrawable.getIntrinsicWidth() + drawablePadding;
         }
-        if (rightDrawable != null) {
+        if (rightDrawable != null && rightDrawable.getAlpha() > 0) {
             int dw = (int) (rightDrawable.getIntrinsicWidth() * rightDrawableScale);
             size += dw + drawablePadding;
         }
-        if (rightDrawable2 != null) {
+        if (rightDrawable2 != null && rightDrawable2.getAlpha() > 0) {
             int dw = (int) (rightDrawable2.getIntrinsicWidth() * rightDrawableScale);
             size += dw + drawablePadding;
         }
@@ -1108,6 +1110,10 @@ public class SimpleTextView extends View implements Drawable.Callback {
         }
         if (rightDrawable != null && rightDrawableOutside) {
             int x = Math.min(textOffsetX + textWidth + drawablePadding + (scrollingOffset == 0 ? -nextScrollX : (int) -scrollingOffset) + nextScrollX, getMaxTextWidth() - paddingRight + drawablePadding);
+            if ((gravity & Gravity.HORIZONTAL_GRAVITY_MASK) == Gravity.CENTER_HORIZONTAL ||
+                    (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) == Gravity.RIGHT) {
+                x += offsetX;
+            }
             int dw = (int) (rightDrawable.getIntrinsicWidth() * rightDrawableScale);
             int dh = (int) (rightDrawable.getIntrinsicHeight() * rightDrawableScale);
             int y;
@@ -1128,6 +1134,10 @@ public class SimpleTextView extends View implements Drawable.Callback {
             );
             if (rightDrawable != null) {
                 x += (int) (rightDrawable.getIntrinsicWidth() * rightDrawableScale) + drawablePadding;
+            }
+            if ((gravity & Gravity.HORIZONTAL_GRAVITY_MASK) == Gravity.CENTER_HORIZONTAL ||
+                    (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) == Gravity.RIGHT) {
+                x += offsetX;
             }
             int dw = (int) (rightDrawable2.getIntrinsicWidth() * rightDrawableScale);
             int dh = (int) (rightDrawable2.getIntrinsicHeight() * rightDrawableScale);

@@ -1093,6 +1093,19 @@ public class ProfileGalleryView extends CircularViewPager implements Notificatio
         public ViewPagerAdapter(Context context, ProfileActivity.AvatarImageView parentAvatarImageView, ActionBar parentActionBar) {
             this.context = context;
             this.parentAvatarImageView = parentAvatarImageView;
+            if(parentAvatarImageView != null) {
+                this.parentAvatarImageView.setImageLoadedDelegate(() -> {
+                    Drawable drawable = parentAvatarImageView.getImageReceiver().getDrawable();
+                    if (drawable instanceof AnimatedFileDrawable) {
+                        final Item item = objects.get(0);
+                        if(item != null && item.imageView != null) {
+                            AnimatedFileDrawable animatedFileDrawable = (AnimatedFileDrawable) drawable;
+                            item.imageView.setImageDrawable(drawable);
+                            animatedFileDrawable.addSecondParentView(item.imageView);
+                        }
+                    }
+                });
+            }
             this.parentActionBar = parentActionBar;
             placeholderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             placeholderPaint.setColor(Color.BLACK);

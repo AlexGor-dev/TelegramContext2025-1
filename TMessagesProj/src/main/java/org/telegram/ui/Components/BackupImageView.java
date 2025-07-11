@@ -56,7 +56,7 @@ public class BackupImageView extends View {
         imageReceiver.setAllowLoadingOnAttachedOnly(true);
         imageReceiver.setDelegate((imageReceiver1, set, thumb, memCache) -> {
             if (set && !thumb) {
-                checkCreateBlurredImage();
+                onImageLoaded();
             }
         });
     }
@@ -64,6 +64,8 @@ public class BackupImageView extends View {
     protected ImageReceiver createImageReciever() {
         return new ImageReceiver(this);
     }
+
+    public boolean isBlurAllowed(){return blurAllowed;}
 
     public void setBlurAllowed(boolean blurAllowed) {
         if (attached) {
@@ -109,6 +111,18 @@ public class BackupImageView extends View {
         }
     }
 
+    private Runnable imageLoadedDelegate;
+
+    public void setImageLoadedDelegate(Runnable imageLoadedDelegate) {
+        this.imageLoadedDelegate = imageLoadedDelegate;
+    }
+
+    protected void onImageLoaded(){
+        checkCreateBlurredImage();
+        if(imageLoadedDelegate != null){
+            imageLoadedDelegate.run();
+        }
+    }
     public void setOrientation(int angle, boolean center) {
         imageReceiver.setOrientation(angle, center);
     }
